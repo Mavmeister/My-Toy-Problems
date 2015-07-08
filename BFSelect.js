@@ -4,25 +4,22 @@ var Tree = function(value){
 };
 
 Tree.prototype.BFSelect = function(filter) {
-  var results = [];
+  // return an array of values for which the function filter(value, depth) returns true
   var queue = new Queue();
-  
-  var addToQueue = function(root, depth){
-    queue.push(root.value)
-    for ( var i = 0; i < root.children.length; i++){
-        addToQueue(root.children[i], depth + 1)
+  var results = [];
+  queue.push({tree: this, depth: 0});
+
+  while (current = queue.pop()) {
+    if (filter(current.tree.value, current.depth)) {
+      results.push(current.tree.value);
+    }
+    current.tree.children.forEach(function(child) {
+      queue.push({tree: child, depth: current.depth + 1});
     }
   }
-  addToQueue(this, 0);
 
-  for (var k = 0; k < queue.storage.length; k++){
-      if(filter(queue.storage[k])){
-          results.push(queue.storage[k])
-      }
-  }
-    return results;
+  return results;
 };
-
 
 /**
  * You shouldn't need to change anything below here, but feel free to look.
